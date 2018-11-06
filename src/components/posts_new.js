@@ -13,22 +13,28 @@ class PostsNew extends Component {
           type="text"
           {...field.input}
         />
+        {field.meta.error}
       </div>
     )
   }
 
+  onSubmit(values) {
+    console.log(values);
+  }
 
   render() {
+    const { handleSubmit } = this.props;
+
     return (
-      <form>
+      <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
        <Field
         label="Title"
         name="title"
         component={this.renderField}
        />
        <Field
-        label="Tags"
-        name="tags"
+        label="Categories"
+        name="categories"
         component={this.renderField}
        />
        <Field
@@ -36,11 +42,34 @@ class PostsNew extends Component {
         name="content"
         component={this.renderField}
        />
+       <button type="submit" className="btn btn-primary">Submit</button>
       </form>
     )
   }
 }
 
+function validate(values) {
+  // console.log(values);
+  const errors = {};
+
+  if (!values.title || values.title.length < 3) {
+    errors.title =  "Enter a title that is at least 3 characters!";
+  }
+
+  if (!values.categories) {
+    errors.categories =  "Enter some categories!";
+  }
+
+  if (!values.content) {
+    errors.content =  "Enter some content!";
+  }
+
+
+  return errors;
+
+}
+
 export default reduxForm({
+  validate,
   form: 'PostsNewForm'
 })(PostsNew);
